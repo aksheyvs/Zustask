@@ -1,8 +1,13 @@
+import { Layout } from "./components/layout/Layout";
+import Header from "./components/layout/Header";
+import MainComponents from "./components/MainComponents";
+
 function App() {
     return (
-        <>
-            <h1 className="text-red-500">Hello</h1>
-        </>
+        <Layout>
+            <Header />
+            <MainComponents />
+        </Layout>
     );
 }
 
