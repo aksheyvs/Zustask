@@ -1,22 +1,38 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import {v4 as uuidv4} from "uuid"
 
-type Todo = {key: string, name: string, completed: boolean}
+type Todo = { key: string; name: string; completed: boolean };
 type TodosStore = {
     todos: Todo[];
-    addTodos: () => void;
-}
+    addTodos: (newTodo: Todo) => void;
+    page: string;
+    updateTodo: (key: string) => void;
+    setPageAll: () => void;
+    setPageActive: () => void;
+    setPageCompleted: () => void;
+    clearCompleted: () => void;
+};
 
 export const useTodosStore = create<TodosStore>()(
     persist(
         (set, get) => ({
             todos: [],
-            addTodos: () => set({todos: get().),
+            addTodos: (newTodo) => set({ todos: [...get().todos, newTodo] }),
+            page: "all",
+            updateTodo: (key) =>
+                set({
+                    todos: get().todos.map((todo) => {
+                        if (todo.key === key) return { ...todo, completed: !todo.completed };
+                        return todo;
+                    }),
+                }),
+            setPageAll: () => set({ page: "all" }),
+            setPageActive: () => set({ page: "active" }),
+            setPageCompleted: () => set({ page: "completed" }),
+            clearCompleted: () => set({ todos: get().todos.filter((todo) => todo.completed === false) }),
         }),
         {
-            name: "todos-storage"
+            name: "todos-storage",
         }
-    ),
-    
-)
+    )
+);
